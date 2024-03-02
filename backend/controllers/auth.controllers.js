@@ -1,6 +1,6 @@
 import User from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
-import generateTokenAndSetCookie from "../utils/generateToken.js"
+import generateToken from "../utils/generateToken.js"
 
 
 
@@ -30,15 +30,17 @@ export const singupUser = async (req, res) => {
             userName,
             password: hashedPassword,
             gender,
-            profilePic: gender === 'male' ? boyProfilePic : girlProfilePic
+            profilePic: gender === 'male' ? boyProfilePic : girlProfilePic,
+           
 
         })
 
         if (newUser) {
-            generateTokenAndSetCookie(newUser._id, res)
+            // generateTokenAndSetCookie(newUser._id, res)
+            const token=await generateToken(user?._id)
             await newUser.save()
 
-            res.status(201).json({ user: newUser })
+            res.status(201).json({ user: {newUser,token:token} })
         } else {
             res.status(400).json({ error: "Invalid user data" })
         }
@@ -58,13 +60,16 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ error: "Invalid Credentials" })
         }
 
-        generateTokenAndSetCookie(user?._id, res)
+        const token=await generateToken(user?._id)
+  
         res.status(200).json({
             _id: user?._id,
             fullName: user?.fullName,
             profilePic: user?.profilePic,
-            userName: user?.userName
+            userName: user?.userName,
+            token:token
         })
+
     } catch (error) {
         console.log('error in login terminal', error.message)
         res.status(500).json({ error: "Internal server error" })

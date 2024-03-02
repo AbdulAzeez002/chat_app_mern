@@ -1,62 +1,70 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useAuthContext } from '../context/AuthContext'
+import axios from 'axios'
 
-export const useSignup=()=>{
-    const [loading,setLoading]=useState(false)
-    const {setAuthUser}=useAuthContext()
+export const useSignup = () => {
+    const [loading, setLoading] = useState(false)
+    const { setAuthUser } = useAuthContext()
 
-    const signup=async({fullName,userName,password,confirmPassword,gender})=>{
+    const signup = async ({ fullName, userName, password, confirmPassword, gender }) => {
 
-        const success=handleInputErrors({fullName,userName,password,confirmPassword,gender})
-        console.log(success,'sueccess')
-        if(!success){
+        const success = handleInputErrors({ fullName, userName, password, confirmPassword, gender })
+        console.log(success, 'sueccess')
+        if (!success) {
             return;
         }
         setLoading(true)
         try {
-            const response=await fetch('http://localhost:5000/api/auth/signup',{
-                method:'POST',
-                headers:{"Content-type":"application/json"},
-                body:JSON.stringify({fullName,userName,password,confirmPassword,gender})
-            })
+            const response = await axios.post('http://localhost:5000/api/auth/signup', {
+                fullName: fullName,
+                userName: userName,
+                password: password,
+                confirmPassword: confirmPassword,
+                gender: gender
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
 
-            const data=await response.json()
-            if(data?.error){
-                throw new Error(data.error)
+            const data = response.data;
+
+            if (data?.error) {
+                throw new Error(data.error);
             }
 
-            if(data){
-                localStorage.setItem('user-info',JSON.stringify(data))
-                setAuthUser(data)
+            if (data) {
+                localStorage.setItem('user-info', JSON.stringify(data));
+                setAuthUser(data);
             }
 
         } catch (error) {
-            console.log(error,'error')
-           toast.error(error.message) 
-        }finally{
+            console.log(error, 'error')
+            toast.error(error.message)
+        } finally {
             setLoading(false)
         }
     }
 
-    return {loading,signup}
+    return { loading, signup }
 }
 
 
 
-const handleInputErrors=({fullName,userName,password,confirmPassword,gender})=>{
+const handleInputErrors = ({ fullName, userName, password, confirmPassword, gender }) => {
 
-    if(!fullName || !userName || !password || !confirmPassword || !gender){
+    if (!fullName || !userName || !password || !confirmPassword || !gender) {
         toast.error("Please fill all the fields")
         return false;
     }
 
-    if(password!==confirmPassword){
+    if (password !== confirmPassword) {
         toast.error("Passwords do not match")
         return false;
     }
 
-    if(password?.length<6){
+    if (password?.length < 6) {
         toast.error('Password must be greater than 6')
         return false;
     }

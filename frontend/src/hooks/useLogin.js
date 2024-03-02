@@ -1,26 +1,30 @@
 import { useState } from "react";
 import toast from 'react-hot-toast'
 import { useAuthContext } from "../context/AuthContext";
+import axios from 'axios'
 const useLogin = () => {
     const [loading, setLoading] = useState(false)
     const { setAuthUser } = useAuthContext()
 
     const login = async ({ userName, password }) => {
-        const success=handleInputErrors(userName,password)
-        console.log(success,'sueccess')
-        if(!success){
+        const success = handleInputErrors(userName, password)
+        console.log(success, 'sueccess')
+        if (!success) {
             return;
         }
 
         setLoading(false)
         try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
-                method: 'POST',
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify({ userName, password })
-            })
+            const response = await axios.post('http://localhost:5000/api/auth/login', {
+                userName: userName,
+                password: password
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
 
-            const data = await response.json()
+            const data = response?.data
             if (data?.error) {
                 throw new Error(data.error)
             }
@@ -41,9 +45,9 @@ const useLogin = () => {
 
 export default useLogin;
 
-const handleInputErrors=(userName,password)=>{
+const handleInputErrors = (userName, password) => {
 
-    if( !userName || !password ){
+    if (!userName || !password) {
         toast.error("Please fill all the fields")
         return false;
     }
