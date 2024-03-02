@@ -8,11 +8,11 @@ import connectToMongoDB from './db/connectToMongoDb.js';
 
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
-
+import { app,server } from './socket/socket.js'
 dotenv.config();
 const PORT=process.env.PORT || 5000
 
-const app=express();
+// const app=express();
 
 
 app.use(express.json())   // to parse the incoming requests with json payloads  (from req.body)
@@ -23,6 +23,6 @@ app.use('/api/messages',messageRoutes)
 app.use('/api/users',userRoutes)
 
 
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
     connectToMongoDB()
     console.log(`server running on port ${PORT}`)})
