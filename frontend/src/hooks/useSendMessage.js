@@ -2,36 +2,38 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from 'axios'
 import { useAuthContext } from '../context/AuthContext';
-import useConversation from '../zustand/useConversation'
+import useConversation from "../zustand/useConversation";
 
-const useGetConversations = () => {
+const useSendMessage = () => {
 	const [loading, setLoading] = useState(false);
-	// const [conversations, setConversations] = useState([]);
+	const {messages,setMessages,selectedConversation}=useConversation()
     const {authUser}=useAuthContext()
     const token=authUser?.token
-    const {conversations,setConversations}=useConversation()
+    
 
-	useEffect(() => {
-		getConversations();
-	}, []);
+	
 
-    const getConversations = async () => {
+    const sendMessage = async (message) => {
         setLoading(true);
         try {
-            const res = await axios.get("http://localhost:5000/api/users",{headers:{
+            const res = await axios.post(`http://localhost:5000/api/messages/send/${selectedConversation?._id}`,{message:message},{headers:{
                 Authorization:`Bearer ${token}`
             }});
             const data = res?.data
             if (data.error) {
                 throw new Error(data.error);
             }
-            setConversations(data);
+
+            if(data){
+                setMessages([...messages,data])
+            }
+            
         } catch (error) {
             toast.error(error.message);
         } finally {
             setLoading(false);
         }
     };
-	return { loading};
+	return { loading, sendMessage };
 };
-export default useGetConversations;
+export default useSendMessage;

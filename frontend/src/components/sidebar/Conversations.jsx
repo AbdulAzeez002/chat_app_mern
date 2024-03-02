@@ -1,20 +1,21 @@
-import React from 'react'
-import Conversation from './Conversation'
-import useGetConversations from '../../hooks/useGetConversations'
+import React from "react";
+import Conversation from "./Conversation";
+import useGetConversations from "../../hooks/useGetConversations";
+import useConversation from "../../zustand/useConversation";
 
-function Conversations() {
-	const {loading,conversations}=useGetConversations()
-	console.log(conversations)
+function Conversations({conversations,loading}) {
+  
+  // const  {conversations}=useConversation()
   return (
-    <div className='py-2 flex flex-col overflow-auto'>
- 			<Conversation />
- 			<Conversation />
- 			<Conversation />
- 			<Conversation />
- 			<Conversation />
- 			<Conversation />
- 		</div>
-  )
+    <div className="py-2 flex flex-col overflow-auto">
+      {conversations &&
+        conversations.map((conversation) => (
+          <Conversation key={conversation?._id} conversation={conversation} />
+        ))}
+
+      {loading && <span className="loading loading-spinner mx-auto"></span>}
+    </div>
+  );
 }
 
-export default Conversations
+export default Conversations;
