@@ -4,10 +4,14 @@
 
 
 body{
-    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("../public/bg.png");
+    /* background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("../public/bg.png");
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center;
+    background-position: center; */
+	/* display: flex;
+	flex-direction: column;
+	background-color: red; */
+	box-sizing: border-box;
 }
 
 /* dark mode looking scrollbar */

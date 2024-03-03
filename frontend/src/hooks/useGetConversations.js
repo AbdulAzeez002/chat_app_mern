@@ -9,6 +9,7 @@ const useGetConversations = () => {
 	// const [conversations, setConversations] = useState([]);
     const {authUser}=useAuthContext()
     const token=authUser?.token
+    console.log(authUser,'tokennne')
     const {conversations,setConversations}=useConversation()
 
 	useEffect(() => {

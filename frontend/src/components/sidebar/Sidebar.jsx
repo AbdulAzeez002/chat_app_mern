@@ -4,10 +4,14 @@ import Conversations from "./Conversations";
 import LogoutButton from "./LogoutButton";
 import useGetConversations from "../../hooks/useGetConversations";
 import useConversation from "../../zustand/useConversation";
+import UserSearchModal from "../modals/UserSearchModal";
 
 function Sidebar() {
   const { loading } = useGetConversations();
   const { conversations } = useConversation();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   //  useGetConversations()
 
   useEffect(() => {
@@ -18,12 +22,23 @@ function Sidebar() {
     useState(conversations);
 
   return (
-    <div className="border-r border-slate-500 p-4 flex flex-col">
+    <>
+    <div className="w-[400px] max-h-screen h-screen flex flex-col p-2">
+      <div className="flex justify-between">
       <SearchInput setFilteredConversations={setFilteredConversations} />
+      <button className="btn bg-rose-900 border-0 text-white hover:bg-rose-700 mr-2" onClick={handleOpen} >New Chat</button>
+      </div>
+       
       <div className="divider px-3"></div>
       <Conversations conversations={filteredConversations} loading={loading} />
+      
+      <div className="">
       <LogoutButton />
+      </div>
+     
     </div>
+    <UserSearchModal open={open} handleClose={handleClose}/>
+    </>
   );
 }
 

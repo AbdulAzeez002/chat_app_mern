@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import useConversation from "../../zustand/useConversation";
 
-
 function SearchInput({ setFilteredConversations }) {
   const [search, setSearch] = useState("");
   const { conversations } = useConversation();
@@ -21,11 +20,11 @@ function SearchInput({ setFilteredConversations }) {
       <input
         type="text"
         placeholder="Search…"
-        className="input input-bordered rounded-full"
+        className="input input-bordered "
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <button type="submit" className="btn btn-circle bg-sky-500 text-white">
+      <button type="submit" className="btn  bg-emerald-950 border-0 hover:bg-emerald-800 text-white">
         <IoSearchSharp className="w-6 h-6 outline-none" />
       </button>
     </form>

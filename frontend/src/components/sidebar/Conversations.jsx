@@ -7,9 +7,9 @@ function Conversations({conversations,loading}) {
   
   // const  {conversations}=useConversation()
   return (
-    <div className="py-2 flex flex-col overflow-auto">
+    <div className=" flex flex-col   overflow-y-scroll py-2">
       {conversations &&
-        conversations.map((conversation) => (
+        conversations?.map((conversation) => (
           <Conversation key={conversation?._id} conversation={conversation} />
         ))}
 

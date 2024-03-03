@@ -10,7 +10,6 @@ const protectRoute = async (req, res, next) => {
 
             // get token from header
             token = req.headers.authorization.split(' ')[1]
-
             //verify token
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
@@ -23,8 +22,7 @@ const protectRoute = async (req, res, next) => {
 
         } catch (error) {
             console.log(error)
-            res.status(401)
-            res.status(500).json({ error: 'Internal server error' })
+            res.status(401).json({ error: 'Internal server error' })
         }
     }
 

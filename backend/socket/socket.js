@@ -20,13 +20,11 @@ export const getRecieverSocketId=(reciverId)=>{
 
 
 io.on('connection',(socket)=>{
-    console.log(socket.id,'a user connected')
 
     const userId=socket.handshake.query.userId
     if(userId!==undefined){
         userSocketMap[userId]=socket.id
     }
-    console.log(userId,'userID')
 
 
     // io.emit is used to send events to all connected clients

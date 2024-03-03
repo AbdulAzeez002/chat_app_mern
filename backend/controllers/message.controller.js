@@ -32,13 +32,13 @@ export const sendMessage = async (req, res) => {
         // this will run parallel
         await Promise.all([conversation.save(), newMessage.save()])
 
-          //Socket io will come here..
-          const recieverSocketId=getRecieverSocketId(recieverId)
-          if(recieverSocketId){
+        //Socket io will come here..
+        const recieverSocketId = getRecieverSocketId(recieverId)
+        if (recieverSocketId) {
 
             // this message is used to send events to specific clients
-            io.to(recieverSocketId)?.emit('newMessage',newMessage)
-          }
+            io.to(recieverSocketId)?.emit('newMessage', newMessage)
+        }
 
         res.status(201).json(newMessage)
     } catch (error) {
@@ -47,23 +47,25 @@ export const sendMessage = async (req, res) => {
     }
 }
 
+
+// Messages
 export const getMessages = async (req, res) => {
     try {
         const { id: userToChatId } = req.params
         const senderId = req.user?._id
 
-        console.log(userToChatId, senderId)
 
         const conversation = await Conversation.findOne({
             participants: { $all: [senderId, userToChatId] }
         }).populate('messages')
 
+
         if (!conversation) {
             return res.status(200).json([])
         }
 
-        const messages = conversation?.messages
 
+        const messages = conversation?.messages
         res.status(200).json(messages)
     } catch (error) {
         console.log('error in getting message', error.message)

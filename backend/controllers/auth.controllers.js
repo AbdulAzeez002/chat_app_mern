@@ -31,16 +31,25 @@ export const singupUser = async (req, res) => {
             password: hashedPassword,
             gender,
             profilePic: gender === 'male' ? boyProfilePic : girlProfilePic,
-           
+
 
         })
 
         if (newUser) {
             // generateTokenAndSetCookie(newUser._id, res)
-            const token=await generateToken(user?._id)
+            const token = await generateToken(newUser?._id)
             await newUser.save()
 
-            res.status(201).json({ user: {newUser,token:token} })
+            const user = {
+                _id: newUser?._id,
+                fullName,
+                profilePic: newUser?.profilePic,
+                userName: userName,
+                token: token
+
+            }
+
+            res.status(201).json(user)
         } else {
             res.status(400).json({ error: "Invalid user data" })
         }
@@ -60,14 +69,14 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ error: "Invalid Credentials" })
         }
 
-        const token=await generateToken(user?._id)
-  
+        const token = await generateToken(user?._id)
+
         res.status(200).json({
             _id: user?._id,
             fullName: user?.fullName,
             profilePic: user?.profilePic,
             userName: user?.userName,
-            token:token
+            token: token
         })
 
     } catch (error) {
