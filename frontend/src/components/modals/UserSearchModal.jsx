@@ -4,6 +4,7 @@ import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import { IoSearchSharp } from "react-icons/io5";
 import debounce from "lodash.debounce";
+import { searchUser } from "../../services/userService";
 
 const style = {
   position: "absolute",
@@ -39,20 +40,26 @@ const fruits = [
 const UserSearchModal = ({ open, handleClose }) => {
   const [searchText, setSearchText] = useState("");
   const [listToDisplay, setListToDisplay] = useState(fruits);
-
+  const [users, setUsers] = useState([]);
   const handleChange = (e) => {
     setSearchText(e.target.value);
   };
 
-  const handleSearch = () => {
-    const filteredListToDisplay = fruits.filter((fruit) => {
-      return fruit.includes(searchText);
-    });
-    setListToDisplay(filteredListToDisplay);
+  const handleSearch = async () => {
+    // const filteredListToDisplay = fruits.filter((fruit) => {
+    //   return fruit.includes(searchText);
+    // });
+
+    // setListToDisplay(filteredListToDisplay);
+
+    const users = await searchUser(searchText);
+    if (users) {
+      setUsers(users);
+    }
   };
 
   const DebouncedSearch = useMemo(() => {
-    return debounce(handleSearch, 1000);
+    return debounce(handleSearch, 300);
   }, [searchText]);
 
   useEffect(() => {
@@ -93,9 +100,10 @@ const UserSearchModal = ({ open, handleClose }) => {
             </div>
           </div>
           <div className="max-h-40 mx-4 px-2 border pb-4 mb-4 rounded-bottom  overflow-y-scroll">
-            {listToDisplay?.map((fruit) => (
-              <p>{fruit}</p>
-            ))}
+            {users && users?.map((user) => <p>{user?.fullName}</p>)}
+            {
+              users?.length===0 && ( <p className="text-rose-800 text-center py-10">No such user found</p> )
+            }
           </div>
         </div>
       </Box>
