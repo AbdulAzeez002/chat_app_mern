@@ -99,8 +99,18 @@ const UserSearchModal = ({ open, handleClose }) => {
               <IoSearchSharp className="w-6 h-6 outline-none me-2 cursor-pointer" />
             </div>
           </div>
-          <div className="max-h-40 mx-4 px-2 border pb-4 mb-4 rounded-bottom  overflow-y-scroll">
-            {users && users?.map((user) => <p>{user?.fullName}</p>)}
+          <div className="max-h-40 mx-4  border pb-4 mb-4 rounded-bottom  overflow-y-scroll">
+            {users && users?.map((user,index) => 
+            
+            <div className={`flex p-2 border-b-slate-600 ${ index!==users?.length-1?'border':'pb-0'} cursor-pointer` }>
+               
+              <div className="">
+                <img src={user?.profilePic} alt="" className="h-8" />
+              </div>
+              <div className="pl-3">
+                {user?.fullName}
+              </div>
+            </div>)}
             {
               users?.length===0 && ( <p className="text-rose-800 text-center py-10">No such user found</p> )
             }
