@@ -84,14 +84,14 @@ export const sendMessage = async (req, res) => {
 
         //Socket io will come here..
         const receiverSocketId = await getRecieverSocketId(receiverId);
-        
+
 
         if (receiverSocketId) {
-            const messageToReciever={
+            const messageToReciever = {
                 senderId,
                 receiverId,
                 message,
-                conversationId:conversation?._id
+                conversationId: conversation?._id
             }
             // this message is used to send events to specific clients
             io.to(receiverSocketId)?.emit('newMessage', messageToReciever);
@@ -104,6 +104,37 @@ export const sendMessage = async (req, res) => {
     }
 };
 
+
+export const updateUnreadCount = async (req, res) => {
+    console.log('readched unread')
+    try {
+        const receiverId = req.params.id;
+        const senderId = req.user?._id;
+
+        const conversation = await Conversation.findOne({
+            "participants.user": { $all: [senderId, receiverId] }
+        });
+
+        //    console.log(conversation,'iddd')
+        // Update unread count for the receiver
+        const receiverParticipant = conversation.participants.find(participant => String(participant.user) === String(receiverId));
+        const senderParticipant = conversation.participants.find(participant => String(participant.user) === String(senderId));
+
+        if (receiverParticipant) {
+            receiverParticipant.unreadCount = 0
+            senderParticipant.unreadCount = 0
+        }
+
+        console.log(receiverParticipant, 'abccdd')
+        await conversation.save()
+
+
+        res.status(201).json({ updated: true });
+    } catch (error) {
+        console.log('error in sending message', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 
 // Messages

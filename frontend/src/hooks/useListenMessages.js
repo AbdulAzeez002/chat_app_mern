@@ -3,7 +3,7 @@ import { useSocketContext } from '../context/SocketContext'
 import useConversation from '../zustand/useConversation'
 import notificationSound from '../assets/notification.mp3'
 import { checkUserAlreadyExists } from '../components/modals/UserSearchModal'
-import { getUserDetails } from '../services/userService'
+import { getUserDetails, updateUnreadCount } from '../services/userService'
 import toast from 'react-hot-toast';
 
 const useListenMessages = () => {
@@ -16,6 +16,12 @@ const useListenMessages = () => {
 
       if (newMessage?.senderId === selectedConversation?.user?._id) {
         setMessages([...messages, newMessage])
+
+        /// logic for making unread count zero
+      
+        const response=await updateUnreadCount(newMessage?.senderId)
+        console.log(response,'response')
+
         const sound = new Audio(notificationSound)
         sound?.play()
         return

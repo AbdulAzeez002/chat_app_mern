@@ -38,3 +38,19 @@ export const getUserDetails = async (id) => {
 }
 
 
+export const updateUnreadCount = async (id) => {
+    const token = await getToken()
+    try {
+        const response = await axios.post(`http://localhost:5000/api/messages/updateCount/${id}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response) {
+            return response?.data
+        }
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
