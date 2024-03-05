@@ -6,7 +6,9 @@ const useConversation=create((set)=>({
     messages:[],
     setMessages:(messages)=>set({messages}),
     conversations:[],
-    setConversations:(conversations)=>set({conversations})
+    setConversations:(conversations)=>set({conversations}),
+    unReadCountOfselectedUser:0,
+    setUnreadCountOfSelectedUser:(count)=>set({unReadCountOfselectedUser:count})
 }))
 
 export default useConversation;

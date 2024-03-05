@@ -155,7 +155,7 @@ export const getMessages = async (req, res) => {
 
         // Update unread count for the sender to 0
         const participantIndex = conversation.participants.findIndex(participant => participant.user.equals(senderId));
-
+        const unreadCount=conversation.participants?.find((participant)=>participant.user.equals(userToChatId ))?.unreadCount
         if (participantIndex !== -1) {
             conversation.participants[participantIndex].unreadCount = 0;
         }
@@ -164,7 +164,8 @@ export const getMessages = async (req, res) => {
         await conversation.save()
 
         const messages = conversation?.messages
-        res.status(200).json(messages)
+        const data={messages:messages,unreadCount}
+        res.status(200).json(data)
     } catch (error) {
         console.log('error in getting message', error.message)
         res.status(500).json({ error: 'Internal server error' })

@@ -4,9 +4,13 @@ import useGetMessages from "../../hooks/useGetMessages";
 import MessageSkeleton from "../skeletons/MessageSkeleton";
 import useListenMessages from "../../hooks/useListenMessages";
 import moment from 'moment'
+import useConversation from "../../zustand/useConversation";
 
 function Messages() {
   const { messages, loading } = useGetMessages();
+  const {unReadCountOfselectedUser}=useConversation()
+
+  
   // useListenMessages();
 
   const lastMessageRef = useRef(null);
@@ -37,7 +41,7 @@ function Messages() {
 			<p className="text-center bg-white rounded px-2 text-sm">{getDayTag(message?.createdAt,messages[index-1]?.createdAt)}</p>
 			</div>
 			
-            <Message key={index} message={message} />
+            <Message key={index} message={message} showTick={messages?.length-1-index<unReadCountOfselectedUser} />
           </div>
         ))}
     </div>

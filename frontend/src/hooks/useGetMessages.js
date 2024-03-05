@@ -7,7 +7,7 @@ import axios from 'axios';
 const useGetMessages = () => {
 
     const [loading, setLoading] = useState(false);
-    const { messages, setMessages, selectedConversation, conversations, setConversations } = useConversation()
+    const { messages, setMessages, selectedConversation, conversations, setConversations,setUnreadCountOfSelectedUser } = useConversation()
     const { authUser } = useAuthContext()
     const token = authUser?.token
 
@@ -45,7 +45,8 @@ const useGetMessages = () => {
                 throw new Error(data.error);
             }
 
-            setMessages(data)
+            setMessages(data?.messages)
+            setUnreadCountOfSelectedUser(data?.unreadCount)
         } catch (error) {
             toast.error(error.message)
         } finally {

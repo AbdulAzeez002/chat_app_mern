@@ -6,7 +6,7 @@ import moment from "moment";
 import DoneIcon from "@mui/icons-material/Done";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 
-function Message({ message }) {
+function Message({ message,showTick }) {
   const { authUser } = useAuthContext();
   const { selectedConversation } = useConversation();
   const fromMe = authUser?._id === message?.senderId;
@@ -34,7 +34,7 @@ function Message({ message }) {
         <div>{message?.message}</div>
 
         <div className="text-end">
-          {fromMe && <DoneIcon className="text-white m-0 p-0" />}
+          {fromMe && (<>{!showTick?<DoneAllIcon className="text-white"/>:<DoneIcon className="text-white m-0 p-0" />}</>) }
 
           {/* <DoneAllIcon className="text-blue-400"/> */}
         </div>
