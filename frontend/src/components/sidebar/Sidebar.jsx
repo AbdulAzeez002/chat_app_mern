@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import SearchInput from "./SearchInput";
 import Conversations from "./Conversations";
-import LogoutButton from "./LogoutButton";
 import useGetConversations from "../../hooks/useGetConversations";
 import useConversation from "../../zustand/useConversation";
 import UserSearchModal from "../modals/UserSearchModal";
+import CommentIcon from "@mui/icons-material/Comment";
+import Tooltip from "@mui/material/Tooltip";
 
 function Sidebar() {
   const { loading } = useGetConversations();
@@ -23,18 +24,27 @@ function Sidebar() {
 
   return (
     <>
-    <div style={{height:'90vh',maxHeight:'90vh'}} className="w-[400px] flex flex-col p-2">
-      <div className="flex justify-between">
-      <SearchInput setFilteredConversations={setFilteredConversations} />
-      <button className="btn bg-rose-900 border-0 text-white hover:bg-rose-700 mr-2" onClick={handleOpen} >New Chat</button>
+      <div
+        style={{ height: "90vh", maxHeight: "90vh" }}
+        className="w-[400px] flex flex-col p-2 relative border-r-2 border-slate-500"
+      >
+        <div >
+          <SearchInput setFilteredConversations={setFilteredConversations} />
+          
+        </div>
+
+        <div className="divider px-3"></div>
+        <Conversations
+          conversations={filteredConversations}
+          loading={loading}
+        />
+        <Tooltip title={"new chat"}>
+          <div onClick={handleOpen} className="absolute cursor-pointer bottom-20 right-5 z-10 bg-slate-100 rounded-full p-4 ">
+            <CommentIcon  />
+          </div>
+        </Tooltip>
       </div>
-       
-      <div className="divider px-3"></div>
-      <Conversations conversations={filteredConversations} loading={loading} />
-      
-      
-    </div>
-    <UserSearchModal open={open} handleClose={handleClose}/>
+      <UserSearchModal open={open} handleClose={handleClose} />
     </>
   );
 }
