@@ -23,7 +23,7 @@ function Sidebar() {
 
   return (
     <>
-    <div className="w-[400px] max-h-screen h-screen flex flex-col p-2">
+    <div style={{height:'90vh',maxHeight:'90vh'}} className="w-[400px] flex flex-col p-2">
       <div className="flex justify-between">
       <SearchInput setFilteredConversations={setFilteredConversations} />
       <button className="btn bg-rose-900 border-0 text-white hover:bg-rose-700 mr-2" onClick={handleOpen} >New Chat</button>
@@ -32,10 +32,7 @@ function Sidebar() {
       <div className="divider px-3"></div>
       <Conversations conversations={filteredConversations} loading={loading} />
       
-      <div className="">
-      <LogoutButton />
-      </div>
-     
+      
     </div>
     <UserSearchModal open={open} handleClose={handleClose}/>
     </>

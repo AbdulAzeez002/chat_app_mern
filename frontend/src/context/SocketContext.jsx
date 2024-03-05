@@ -24,7 +24,7 @@ export const SocketContextProvider=({children})=>{
         setSocket(newSocket)
 
         // socket.on is used to listen to events
-        newSocket.on('getOnlineUsers',(onlineUsers)=>{ console.log(onlineUsers,'onlin'); setOnlineUsers(onlineUsers)})
+        newSocket.on('getOnlineUsers',(onlineUsers)=>{  setOnlineUsers(onlineUsers)})
 
     }else{
         if(socket){

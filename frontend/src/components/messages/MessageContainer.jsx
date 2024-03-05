@@ -14,7 +14,10 @@ function MessageContainer() {
     };
   }, [setSelectedConversation]);
   return (
-    <div className="flex-1 flex flex-col px-4 py-4 max-h-screen">
+    <div
+      style={{ maxHeight: "90vh" }}
+      className="flex-1 flex flex-col px-4 py-4 "
+    >
       <>
         {!selectedConversation ? (
           <>
@@ -22,11 +25,19 @@ function MessageContainer() {
           </>
         ) : (
           <>
-            <div className="bg-slate-500 px-4 py-2 mb-2">
-              <span className="label-text">To:</span>{" "}
-              <span className="text-gray-900 font-bold">
-                {selectedConversation?.fullName}
+            <div className="bg-slate-200 px-4 py-2 mb-2 rounded flex justify-between">
+              <div className="flex">
+                <div>
+                  <img src={selectedConversation?.user?.profilePic} className="h-9" alt="" />
+                </div>
+              <span className="text-gray-900 font-semibold ml-4">
+                {selectedConversation?.user?.fullName}
               </span>
+              </div>
+              {/* <div>
+                <button>delete</button>
+              </div> */}
+             
             </div>
 
             <Messages />

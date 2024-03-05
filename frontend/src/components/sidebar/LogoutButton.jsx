@@ -1,14 +1,30 @@
 import React from "react";
 import { BiLogOut } from "react-icons/bi";
 import useLogout from "../../hooks/useLogout";
+import { useAuthContext } from "../../context/AuthContext";
 function LogoutButton() {
-  const {loading,logout}=useLogout()
+  const { logout } = useLogout();
+  const { authUser } = useAuthContext();
 
   return (
-    
     <div className="py-4 ">
-      {/* <BiLogOut className="w-6 h-6 text-white cursor-pointer"  /> */}
-      <button className="btn bg-rose-900 border-0 text-white hover:bg-rose-700 w-20" onClick={logout}>Logout</button>
+      {!authUser ? (
+        <div>
+          <button
+            className="btn bg-emerald-900 border-0 text-white hover:bg-emerald-700 w-20"
+            onClick={logout}
+          >
+            Login
+          </button>
+        </div>
+      ) : (
+        <button
+          className="btn bg-rose-900 border-0 text-white hover:bg-rose-700 w-20"
+          onClick={logout}
+        >
+          Logout
+        </button>
+      )}
     </div>
   );
 }

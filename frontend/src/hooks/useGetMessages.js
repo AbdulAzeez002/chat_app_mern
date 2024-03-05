@@ -7,21 +7,35 @@ import axios from 'axios';
 const useGetMessages = () => {
 
     const [loading, setLoading] = useState(false);
-    const { messages, setMessages, selectedConversation } = useConversation()
+    const { messages, setMessages, selectedConversation, conversations, setConversations } = useConversation()
     const { authUser } = useAuthContext()
     const token = authUser?.token
 
     useEffect(() => {
-        if (selectedConversation?._id) {
+        if (selectedConversation?.user?._id) {
             getMessages()
+            makeUnreadCountZero()
         }
 
-    }, [selectedConversation?._id,setMessages])
+    }, [selectedConversation?.user?._id, setMessages])
+
+    const makeUnreadCountZero = () => {
+
+        const convertedConversations = conversations?.map((conv) => {
+            if (conv?.user?._id === selectedConversation?.user?._id) {
+                conv.unreadCount = 0
+                return conv
+            }
+            return conv
+        })
+        setConversations(convertedConversations)
+
+    }
 
     const getMessages = async () => {
         setLoading(true)
         try {
-            const res = await axios.get(`http://localhost:5000/api/messages/${selectedConversation?._id}`, {
+            const res = await axios.get(`http://localhost:5000/api/messages/${selectedConversation?.user?._id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -39,7 +53,8 @@ const useGetMessages = () => {
         }
     }
 
-    return {messages,loading}
+    return { messages, loading }
 }
 
 export default useGetMessages
+

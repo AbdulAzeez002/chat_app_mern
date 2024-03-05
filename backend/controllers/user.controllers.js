@@ -3,26 +3,34 @@ import User from "../models/user.model.js"
 
 export const getUsersForSidebar = async (req, res) => {
     try {
+
         const loggedInUser = req.user._id
-        const filteredUsers = await User.find({ _id: { $ne: loggedInUser } }).select("-password")
+        
+        // const filteredUsers = await User.find({ _id: { $ne: loggedInUser } }).select("-password")
 
         // for getting only chatted users
-        const conversations = await Conversation.find({ 'participants': loggedInUser }).populate('participants').populate('messages').sort({ updatedAt: -1 })
+        const conversations = await Conversation.find({ 'participants.user': loggedInUser }).populate('participants.user').populate('messages').sort({ updatedAt: -1 })
+    //    console.log(conversations,'b')
 
-        // const users = conversations.reduce((acc, conv) => {
-        //     conv.participants.forEach(participant => {
-        //         console.log((participant._id).toString() === loggedInUser.toString(), 'ids')
-        //         if ((participant._id).toString() !== loggedInUser.toString()) {
-        //             // Exclude the user themselves from the list
-        //             acc.push(participant);
-        //         }
-        //     });
-        //     return acc;
-        // }, []);
-        // res.status(200).json(users)
+        const users = conversations.reduce((acc, conv) => {
+            conv.participants.forEach(participant => {
+                const me = conv.participants.find(p => p.user._id.toString() === loggedInUser.toString());
+                const unreadCount=me?.unreadCount
+                
+                if ((participant.user?._id).toString() !== loggedInUser.toString()) {
+                    participant.unreadCount=unreadCount
+                    // Exclude the user themselves from the list
+                    acc.push(participant);
+                }
+            });
+            return acc;
+        }, []);
+  
+        console.log(users,'c')
+        res.status(200).json(users)
 
 
-        res.status(200).json(filteredUsers)
+        // res.status(200).json(filteredUsers)
         // res.status(200).json(conversations)
 
 

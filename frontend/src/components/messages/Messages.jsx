@@ -7,7 +7,7 @@ import moment from 'moment'
 
 function Messages() {
   const { messages, loading } = useGetMessages();
-  useListenMessages();
+  // useListenMessages();
 
   const lastMessageRef = useRef(null);
 
@@ -30,7 +30,7 @@ function Messages() {
       {!loading &&
         messages?.length > 0 &&
         messages?.map((message, index) => (
-          <div ref={lastMessageRef}>
+          <div ref={lastMessageRef} key={index}>
             
 			
 			<div className="flex justify-center py-2">

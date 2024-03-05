@@ -5,6 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { IoSearchSharp } from "react-icons/io5";
 import debounce from "lodash.debounce";
 import { searchUser } from "../../services/userService";
+import useConversation from "../../zustand/useConversation";
 
 const style = {
   position: "absolute",
@@ -18,39 +19,27 @@ const style = {
   height: 300,
 };
 
-const fruits = [
-  "apple",
-  "orange",
-  "banana",
-  "pear",
-  "grapefruit",
-  "peach",
-  "apricot",
-  "nectarine",
-  "plum",
-  "mango",
-  "strawberry",
-  "blueberry",
-  "kiwi",
-  "passionfruit",
-  "raspberry",
-  "watermelon",
-];
+export const checkUserAlreadyExists=(id,conversations)=>{
+ 
+  for (let i = 0; i < conversations.length; i++) {
+    if (conversations[i]?.user?._id === id) {
+        return i; // Return the index when a match is found
+    }
+}
+return -1; 
+}
 
 const UserSearchModal = ({ open, handleClose }) => {
   const [searchText, setSearchText] = useState("");
-  const [listToDisplay, setListToDisplay] = useState(fruits);
   const [users, setUsers] = useState([]);
+
+  const {conversations,setConversations,setSelectedConversation}=useConversation();
+
   const handleChange = (e) => {
     setSearchText(e.target.value);
   };
 
   const handleSearch = async () => {
-    // const filteredListToDisplay = fruits.filter((fruit) => {
-    //   return fruit.includes(searchText);
-    // });
-
-    // setListToDisplay(filteredListToDisplay);
 
     const users = await searchUser(searchText);
     if (users) {
@@ -68,6 +57,28 @@ const UserSearchModal = ({ open, handleClose }) => {
       DebouncedSearch.cancel();
     };
   }, [searchText]);
+
+
+
+  const handleClick=(user)=>{
+    
+    const userIndex=checkUserAlreadyExists(user?._id,conversations)
+    if(userIndex===-1){
+      const newUser={
+        user:user,
+        unreadCount:0,
+
+      }
+      const newConversations=[newUser,...conversations]
+      setConversations(newConversations)
+      setSelectedConversation(newUser)
+      handleClose()
+    }
+    
+
+  }
+
+
 
   return (
     <Modal
@@ -102,7 +113,7 @@ const UserSearchModal = ({ open, handleClose }) => {
           <div className="max-h-40 mx-4  border pb-4 mb-4 rounded-bottom  overflow-y-scroll">
             {users && users?.map((user,index) => 
             
-            <div className={`flex p-2 border-b-slate-600 ${ index!==users?.length-1?'border':'pb-0'} cursor-pointer` }>
+            <div key={index} onClick={()=>handleClick(user)} className={`flex p-2 border-b-slate-600 ${ index!==users?.length-1?'border':'pb-0'} cursor-pointer` }>
                
               <div className="">
                 <img src={user?.profilePic} alt="" className="h-8" />

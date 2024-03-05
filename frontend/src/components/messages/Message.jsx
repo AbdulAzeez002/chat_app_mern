@@ -3,6 +3,8 @@ import { useAuthContext } from "../../context/AuthContext";
 import useConversation from "../../zustand/useConversation";
 import { extractTime } from "../../utils/extractTime";
 import moment from "moment";
+import DoneIcon from "@mui/icons-material/Done";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
 
 function Message({ message }) {
   const { authUser } = useAuthContext();
@@ -11,7 +13,7 @@ function Message({ message }) {
   const chatClassName = fromMe ? "chat-end" : "chat-start";
   const profilePic = fromMe
     ? authUser?.profilePic
-    : selectedConversation?.profilePic;
+    : selectedConversation?.user?.profilePic;
   const bubbleBgColor = fromMe ? "bg-blue-500" : "";
   const formattedDate = extractTime(message?.createdAt);
 
@@ -28,9 +30,16 @@ function Message({ message }) {
           <img alt="Tailwind CSS chat bubble component" src={profilePic} />
         </div>
       </div>
-      <div className={`chat-bubble text-white ${bubbleBgColor} pb-2`}>
-        {message?.message}
+      <div className={`chat-bubble   text-white ${bubbleBgColor} pb-2`}>
+        <div>{message?.message}</div>
+
+        <div className="text-end">
+          {fromMe && <DoneIcon className="text-white m-0 p-0" />}
+
+          {/* <DoneAllIcon className="text-blue-400"/> */}
+        </div>
       </div>
+      <div></div>
       <div className="chat-footer opacity-50 text-xs flex gap-1 items-center text-white">
         {getTime(message?.createdAt)}
       </div>
