@@ -12,12 +12,15 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 500,
+  width: 600,
   bgcolor: "background.paper",
-  border: "2px solid #000",
-  borderRadius: "5px",
-  height: 300,
+  border: "none", // Remove border
+  boxShadow: "none", // Remove shadow
+  height: 500,
+  outline: 'none',
 };
+
+
 
 export const checkUserAlreadyExists=(id,conversations)=>{
  
@@ -86,8 +89,9 @@ const UserSearchModal = ({ open, handleClose }) => {
       // onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      
     >
-      <Box sx={style}>
+      <Box sx={style} className='rounded'>
         <div>
           <div className="flex justify-between p-4">
             <h2 className="text-xl font-semibold">Search</h2>
@@ -110,20 +114,20 @@ const UserSearchModal = ({ open, handleClose }) => {
               <IoSearchSharp className="w-6 h-6 outline-none me-2 cursor-pointer" />
             </div>
           </div>
-          <div className="max-h-40 mx-4  border pb-4 mb-4 rounded-bottom  overflow-y-scroll">
+          <div className="max-h-80 mx-4  border pb-4 mb-4 rounded-bottom  overflow-y-scroll">
             {users && users?.map((user,index) => 
             
-            <div key={index} onClick={()=>handleClick(user)} className={`flex p-2 border-b-slate-600 ${ index!==users?.length-1?'border':'pb-0'} cursor-pointer` }>
+            <div key={index} onClick={()=>handleClick(user)} className={`flex p-4 border-b-slate-600 ${ index!==users?.length-1?'border':'pb-0'} cursor-pointer` }>
                
               <div className="">
-                <img src={user?.profilePic} alt="" className="h-8" />
+                <img src={user?.profilePic} alt="" className="h-10" />
               </div>
               <div className="pl-3">
                 {user?.fullName}
               </div>
             </div>)}
             {
-              users?.length===0 && ( <p className="text-rose-800 text-center py-10">No such user found</p> )
+              users?.length===0 && ( <p className="text-rose-800 text-center h-72 pt-12">No such user found</p> )
             }
           </div>
         </div>

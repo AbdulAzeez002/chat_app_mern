@@ -26,7 +26,7 @@ export const getUsersForSidebar = async (req, res) => {
             return acc;
         }, []);
   
-        console.log(users,'c')
+        
         res.status(200).json(users)
 
 
@@ -66,3 +66,17 @@ export const userSearch = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+export const getUserDetails=async(req,res)=>{
+   const id=req.params.id
+   try {
+    const user=await User.findById(id)?.select('-password')
+    if(user){
+        res.status(200).json(user)
+    }else{
+        res.status(400).json({error:'No such user found'})
+    }
+   } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+   }
+}

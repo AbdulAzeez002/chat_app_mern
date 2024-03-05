@@ -14,7 +14,7 @@ function Message({ message }) {
   const profilePic = fromMe
     ? authUser?.profilePic
     : selectedConversation?.user?.profilePic;
-  const bubbleBgColor = fromMe ? "bg-blue-500" : "";
+  const bubbleBgColor = fromMe ? "bg-sky-400" : "bg-slate-500";
   const formattedDate = extractTime(message?.createdAt);
 
   const getTime = (timestamp) => {

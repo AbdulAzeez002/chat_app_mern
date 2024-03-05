@@ -3,29 +3,50 @@ import { useSocketContext } from '../context/SocketContext'
 import useConversation from '../zustand/useConversation'
 import notificationSound from '../assets/notification.mp3'
 import { checkUserAlreadyExists } from '../components/modals/UserSearchModal'
+import { getUserDetails } from '../services/userService'
+import toast from 'react-hot-toast';
 
 const useListenMessages = () => {
 
   const { socket } = useSocketContext()
-  const { messages, setMessages, selectedConversation, conversations } = useConversation()
+  const { messages, setMessages, selectedConversation, conversations, setConversations } = useConversation()
 
   useEffect(() => {
-    socket?.on('newMessage', (newMessage) => {
+    socket?.on('newMessage', async (newMessage) => {
 
       if (newMessage?.senderId === selectedConversation?.user?._id) {
         setMessages([...messages, newMessage])
         const sound = new Audio(notificationSound)
         sound?.play()
+        return
       } else {
-        const userIndex = checkUserAlreadyExists(newMessage?.senderId, conversations)
-        console.log(userIndex, 'index')
-        // if(newMessage?.senderId)
+
+        try {
+          const userIndex = checkUserAlreadyExists(newMessage?.senderId, conversations)
+          if (userIndex === -1) {
+
+            const user = await getUserDetails(newMessage?.senderId)
+            if (user) {
+              setConversations([{ user, unreadCount: 1 }, ...conversations])
+            }
+          } else {
+
+            const oldConversations = conversations
+            const user = oldConversations?.splice(userIndex, 1)
+            const newUser = { ...user[0] }
+            newUser.unreadCount = newUser?.unreadCount + 1
+            setConversations([newUser, ...oldConversations])
+          }
+        } catch (error) {
+          toast.error(error.message)
+        }
+
       }
 
     })
 
     return () => socket?.off('newMessage')
-  }, [socket, messages, setMessages])
+  }, [socket, messages, setMessages, conversations])
 }
 
 export default useListenMessages
